@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wno-attributes -m64 -O3  -rdynamic CMakeFiles/main.dir/src/compiler.cpp.o CMakeFiles/main.dir/src/ExpLexer.cpp.o CMakeFiles/main.dir/src/ExpParser.cpp.o  -o main   -L/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/lib  -Wl,-rpath,/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/lib -lantlr4-runtime 

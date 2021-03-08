@@ -1,0 +1,11 @@
+# Target labels
+ utfcpp
+# Source files and their labels
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/CMakeFiles/utfcpp-build
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/CMakeFiles/utfcpp-build.rule
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-build.rule
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-configure.rule
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-skip-update.rule
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-patch.rule
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-download.rule
+/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-mkdir.rule

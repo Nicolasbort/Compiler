@@ -1,0 +1,3 @@
+/home/nicolas/Desktop/compilador/build/CMakeFiles/rebuild_cache.dir
+/home/nicolas/Desktop/compilador/build/CMakeFiles/edit_cache.dir
+/home/nicolas/Desktop/compilador/build/CMakeFiles/main.dir

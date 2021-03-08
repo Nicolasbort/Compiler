@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/CMakeFiles/utfcpp"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/CMakeFiles/utfcpp.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/CMakeFiles/utfcpp-complete.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-install.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-mkdir.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-download.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-patch.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-configure.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-build.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-test.rule"
+		},
+		{
+			"file" : "/home/nicolas/Desktop/compilador/trdparty/antilr-runtime/build/runtime/utfcpp-prefix/src/utfcpp-stamp/utfcpp-skip-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"utfcpp"
+		],
+		"name" : "utfcpp"
+	}
+}
