@@ -1,5 +1,0 @@
-negative_test 3 0.00140955
-cpp11_test 3 0.0010293
-api_test 3 0.000931629
-noexceptions_test 3 0.000834007
----
