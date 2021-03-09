@@ -11,6 +11,7 @@ set( antlr_LIB_DIR "${PROJECT_SOURCE_DIR}/trdparty/antilr-runtime/build/lib" )
 message(STATUS "antlr_INCLUDE_DIR: ${antlr_INCLUDE_DIR}")
 message(STATUS "antlr_LIB_DIR: ${antlr_LIB_DIR}")
 
+# project include folder &&
 # Antlr include folder
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
@@ -25,13 +26,13 @@ link_directories(
 
 
 add_executable(
-    main
+    ${PROJECT_NAME}
     src/compiler.cpp
     src/ExpLexer.cpp
     src/ExpParser.cpp
 )
 
 target_link_libraries(
-    main
+    ${PROJECT_NAME}
     antlr4-runtime
 )
