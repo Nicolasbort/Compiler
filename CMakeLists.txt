@@ -11,6 +11,7 @@ set( antlr_LIB_DIR "${PROJECT_SOURCE_DIR}/trdparty/antlr-runtime/build/lib" )
 message(STATUS "antlr_INCLUDE_DIR: ${antlr_INCLUDE_DIR}")
 message(STATUS "antlr_LIB_DIR: ${antlr_LIB_DIR}")
 
+
 # project include folder &&
 # Antlr include folder
 include_directories(

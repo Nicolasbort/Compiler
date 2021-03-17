@@ -72,10 +72,12 @@ public:
     antlr4::Token *op = nullptr;
     ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TermContext *term();
-    ExpressionContext *expression();
-    antlr4::tree::TerminalNode *PLUS();
-    antlr4::tree::TerminalNode *MINUS();
+    std::vector<TermContext *> term();
+    TermContext* term(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> PLUS();
+    antlr4::tree::TerminalNode* PLUS(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> MINUS();
+    antlr4::tree::TerminalNode* MINUS(size_t i);
 
    
   };
@@ -87,11 +89,14 @@ public:
     antlr4::Token *op = nullptr;
     TermContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    FactorContext *factor();
-    TermContext *term();
-    antlr4::tree::TerminalNode *TIMES();
-    antlr4::tree::TerminalNode *OVER();
-    antlr4::tree::TerminalNode *REM();
+    std::vector<FactorContext *> factor();
+    FactorContext* factor(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> TIMES();
+    antlr4::tree::TerminalNode* TIMES(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> OVER();
+    antlr4::tree::TerminalNode* OVER(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> REM();
+    antlr4::tree::TerminalNode* REM(size_t i);
 
    
   };
