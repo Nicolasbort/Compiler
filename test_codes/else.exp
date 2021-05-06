@@ -1,0 +1,16 @@
+a = 2
+if a == 3{
+    a = 4
+} else {
+    a = 7
+
+    if a == 7 {
+        print(a+3)
+    }
+
+    if a+3 >= 10 {
+        print(25)
+    }
+}
+
+print(a)

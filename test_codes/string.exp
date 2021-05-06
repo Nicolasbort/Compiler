@@ -1,0 +1,6 @@
+print("abc")
+
+print(read_str())
+
+x = "def"
+print(x)
