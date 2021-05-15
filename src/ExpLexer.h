@@ -12,11 +12,12 @@
 class  ExpLexer : public antlr4::Lexer {
 public:
   enum {
-    COMMENT = 1, SPACE = 2, PLUS = 3, MINUS = 4, TIMES = 5, OVER = 6, REM = 7, 
-    OP_PAR = 8, CL_PAR = 9, OP_CUR = 10, CL_CUR = 11, ATTRIB = 12, COMMA = 13, 
-    EQ = 14, NE = 15, GT = 16, GE = 17, LT = 18, LE = 19, NUMBER = 20, STRING = 21, 
-    PRINT = 22, READ_INT = 23, READ_STR = 24, IF = 25, ELSE = 26, WHILE = 27, 
-    NAME = 28
+    MLCOMMENT = 1, COMMENT = 2, SPACE = 3, PLUS = 4, MINUS = 5, TIMES = 6, 
+    OVER = 7, REM = 8, OP_BRA = 9, CL_BRA = 10, OP_PAR = 11, CL_PAR = 12, 
+    OP_CUR = 13, CL_CUR = 14, ATTRIB = 15, COMMA = 16, DOT = 17, EQ = 18, 
+    NE = 19, GT = 20, GE = 21, LT = 22, LE = 23, NUMBER = 24, STRING = 25, 
+    PRINT = 26, READ_INT = 27, READ_STR = 28, IF = 29, ELSE = 30, WHILE = 31, 
+    BREAK = 32, CONTINUE = 33, PUSH = 34, LENGTH = 35, NAME = 36
   };
 
   explicit ExpLexer(antlr4::CharStream *input);

@@ -2,6 +2,8 @@
     #include <iostream>
     #include <iterator>
     #include <vector>
+    #include <stdlib.h>
+    
     
     using namespace std;
 
@@ -19,17 +21,20 @@
 class  ExpParser : public antlr4::Parser {
 public:
   enum {
-    COMMENT = 1, SPACE = 2, PLUS = 3, MINUS = 4, TIMES = 5, OVER = 6, REM = 7, 
-    OP_PAR = 8, CL_PAR = 9, OP_CUR = 10, CL_CUR = 11, ATTRIB = 12, COMMA = 13, 
-    EQ = 14, NE = 15, GT = 16, GE = 17, LT = 18, LE = 19, NUMBER = 20, STRING = 21, 
-    PRINT = 22, READ_INT = 23, READ_STR = 24, IF = 25, ELSE = 26, WHILE = 27, 
-    NAME = 28
+    MLCOMMENT = 1, COMMENT = 2, SPACE = 3, PLUS = 4, MINUS = 5, TIMES = 6, 
+    OVER = 7, REM = 8, OP_BRA = 9, CL_BRA = 10, OP_PAR = 11, CL_PAR = 12, 
+    OP_CUR = 13, CL_CUR = 14, ATTRIB = 15, COMMA = 16, DOT = 17, EQ = 18, 
+    NE = 19, GT = 20, GE = 21, LT = 22, LE = 23, NUMBER = 24, STRING = 25, 
+    PRINT = 26, READ_INT = 27, READ_STR = 28, IF = 29, ELSE = 30, WHILE = 31, 
+    BREAK = 32, CONTINUE = 33, PUSH = 34, LENGTH = 35, NAME = 36
   };
 
   enum {
     RuleProgram = 0, RuleMain = 1, RuleStatement = 2, RuleSt_print = 3, 
-    RuleSt_attrib = 4, RuleSt_if = 5, RuleSt_while = 6, RuleComparision = 7, 
-    RuleExpression = 8, RuleTerm = 9, RuleFactor = 10
+    RuleSt_attrib = 4, RuleSt_if = 5, RuleSt_while = 6, RuleSt_break = 7, 
+    RuleSt_continue = 8, RuleStr_array_create = 9, RuleSt_array_push = 10, 
+    RuleSt_array_set = 11, RuleComparision = 12, RuleExpression = 13, RuleTerm = 14, 
+    RuleFactor = 15
   };
 
   explicit ExpParser(antlr4::TokenStream *input);
@@ -44,12 +49,13 @@ public:
 
       vector<string> symbol_table = {"args"};
       vector<char>   type_table = {'s'};
+      vector<int>    list_while;
       int stackSize    = 0;
       int stackMax     = 0;
 
       int ifCounter    = 0;
-      int elseCounter  = 0;
       int whileCounter = 0;
+      int whileGlobal  = 0;
 
       void calculateStack(string command, short value)
       {
@@ -67,6 +73,8 @@ public:
       }
 
 
+
+
   class ProgramContext;
   class MainContext;
   class StatementContext;
@@ -74,6 +82,11 @@ public:
   class St_attribContext;
   class St_ifContext;
   class St_whileContext;
+  class St_breakContext;
+  class St_continueContext;
+  class Str_array_createContext;
+  class St_array_pushContext;
+  class St_array_setContext;
   class ComparisionContext;
   class ExpressionContext;
   class TermContext;
@@ -110,6 +123,11 @@ public:
     St_attribContext *st_attrib();
     St_ifContext *st_if();
     St_whileContext *st_while();
+    St_breakContext *st_break();
+    St_continueContext *st_continue();
+    Str_array_createContext *str_array_create();
+    St_array_pushContext *st_array_push();
+    St_array_setContext *st_array_set();
 
    
   };
@@ -183,6 +201,80 @@ public:
   };
 
   St_whileContext* st_while();
+
+  class  St_breakContext : public antlr4::ParserRuleContext {
+  public:
+    St_breakContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *BREAK();
+
+   
+  };
+
+  St_breakContext* st_break();
+
+  class  St_continueContext : public antlr4::ParserRuleContext {
+  public:
+    St_continueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *CONTINUE();
+
+   
+  };
+
+  St_continueContext* st_continue();
+
+  class  Str_array_createContext : public antlr4::ParserRuleContext {
+  public:
+    antlr4::Token *nameToken = nullptr;
+    Str_array_createContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NAME();
+    antlr4::tree::TerminalNode *ATTRIB();
+    antlr4::tree::TerminalNode *OP_BRA();
+    antlr4::tree::TerminalNode *CL_BRA();
+
+   
+  };
+
+  Str_array_createContext* str_array_create();
+
+  class  St_array_pushContext : public antlr4::ParserRuleContext {
+  public:
+    antlr4::Token *nameToken = nullptr;
+    ExpParser::ExpressionContext *expressionContext = nullptr;
+    St_array_pushContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NAME();
+    antlr4::tree::TerminalNode *DOT();
+    antlr4::tree::TerminalNode *PUSH();
+    antlr4::tree::TerminalNode *OP_PAR();
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *CL_PAR();
+
+   
+  };
+
+  St_array_pushContext* st_array_push();
+
+  class  St_array_setContext : public antlr4::ParserRuleContext {
+  public:
+    antlr4::Token *nameToken = nullptr;
+    ExpParser::ExpressionContext *ex1 = nullptr;
+    ExpParser::ExpressionContext *ex2 = nullptr;
+    St_array_setContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NAME();
+    antlr4::tree::TerminalNode *OP_BRA();
+    antlr4::tree::TerminalNode *CL_BRA();
+    antlr4::tree::TerminalNode *ATTRIB();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+
+   
+  };
+
+  St_array_setContext* st_array_set();
 
   class  ComparisionContext : public antlr4::ParserRuleContext {
   public:
@@ -258,8 +350,12 @@ public:
     ExpressionContext *expression();
     antlr4::tree::TerminalNode *CL_PAR();
     antlr4::tree::TerminalNode *NAME();
-    antlr4::tree::TerminalNode *READ_STR();
+    antlr4::tree::TerminalNode *OP_BRA();
+    antlr4::tree::TerminalNode *CL_BRA();
+    antlr4::tree::TerminalNode *DOT();
+    antlr4::tree::TerminalNode *LENGTH();
     antlr4::tree::TerminalNode *READ_INT();
+    antlr4::tree::TerminalNode *READ_STR();
 
    
   };

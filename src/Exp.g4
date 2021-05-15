@@ -7,6 +7,8 @@ grammar Exp;
     #include <iostream>
     #include <iterator>
     #include <vector>
+    #include <stdlib.h>
+    
     
     using namespace std;
 }
@@ -15,12 +17,13 @@ grammar Exp;
 {
     vector<string> symbol_table = {"args"};
     vector<char>   type_table = {'s'};
+    vector<int>    list_while;
     int stackSize    = 0;
     int stackMax     = 0;
 
     int ifCounter    = 0;
-    int elseCounter  = 0;
     int whileCounter = 0;
+    int whileGlobal  = 0;
 
     void calculateStack(string command, short value)
     {
@@ -36,24 +39,30 @@ grammar Exp;
     {
         cout << "   " << command;
     }
+
+
 }
 
 /*---------------- LEXER RULES ----------------*/
 
+MLCOMMENT: '#*' .*? '*#'      -> skip;
 COMMENT: '#' ~('\n')*         -> skip;
-SPACE : (' '|'\t'|'\r'|'\n')+ -> skip ;
+SPACE : (' '|'\t'|'\r'|'\n')+ -> skip;
 
 PLUS  : '+';
 MINUS : '-';
 TIMES : '*';
 OVER  : '/';
 REM   : '%';
+OP_BRA: '[';
+CL_BRA: ']';
 OP_PAR: '(';
 CL_PAR: ')';
 OP_CUR: '{';
 CL_CUR: '}';
 ATTRIB: '=';
 COMMA : ',';
+DOT   : '.';
 
 // if Tokens
 EQ    : '==';
@@ -72,6 +81,10 @@ READ_STR : 'read_str';
 IF       : 'if';
 ELSE     : 'else';
 WHILE    : 'while';
+BREAK    : 'break';
+CONTINUE : 'continue';
+PUSH     : 'push';
+LENGTH   : 'length';
 
 NAME     : 'a'..'z'+;
 
@@ -107,7 +120,7 @@ main:
     }
     ;
 
-statement: st_print | st_attrib | st_if | st_while;
+statement: st_print | st_attrib | st_if | st_while | st_break | st_continue | str_array_create | st_array_push | st_array_set;
 
 
 st_print: PRINT OP_PAR
@@ -166,29 +179,27 @@ st_attrib: NAME ATTRIB expression
 st_if: IF comparision
     {
         int ifLocal   = ifCounter;
-        int elseLocal = elseCounter;
         ifCounter++;
 
         calculateStack("NOT_IF_" + to_string(ifLocal), -2);
     }
     OP_CUR ( statement )+ CL_CUR
     {
-        printFormat("goto END_ELSE_" + to_string(elseLocal) + "\n");
+        printFormat("goto END_ELSE_" + to_string(ifLocal) + "\n");
         printFormat("NOT_IF_" + to_string(ifLocal) + ":\n");
     }
-    (ELSE OP_CUR ( statement )+ CL_CUR
+    (ELSE OP_CUR ( statement )+ CL_CUR)?
     {
-        elseCounter++;
-        printFormat("END_ELSE_" + to_string(elseLocal) + ":\n");
-    }
-    )?;
+        printFormat("END_ELSE_" + to_string(ifLocal) + ":\n");
+    };
 
 
 
 st_while: WHILE
     {
-        int whileLocal = whileCounter;
         whileCounter++;
+        int whileLocal = whileCounter;
+        list_while.push_back(whileCounter);
 
         printFormat("BEGIN_WHILE_" + to_string(whileLocal) + ":\n");
     }
@@ -200,6 +211,79 @@ st_while: WHILE
     {
         printFormat("goto BEGIN_WHILE_" + to_string(whileLocal) + "\n");
         printFormat("END_WHILE_" + to_string(whileLocal) + ":\n");
+        list_while.pop_back();
+    };
+
+
+st_break: BREAK
+    {
+        if (!list_while.empty())
+            printFormat("goto END_WHILE_" + to_string(list_while[list_while.size() - 1]) + "\n");
+        else
+            cerr << "Error: Line " << $ctx->getStart()->getLine() << " - Ignoring break. Break needs to be used inside a while\n";
+    };
+
+st_continue: CONTINUE
+    {
+        if (!list_while.empty())
+            printFormat("goto BEGIN_WHILE_" + to_string(list_while.size() - 1) + "\n");
+        else {
+            cerr << "Error: Line " << $ctx->getStart()->getLine() << " - Ignoring continue. Continue needs to be used inside a while\n";
+        }
+    };
+
+
+str_array_create: NAME ATTRIB OP_BRA CL_BRA
+    {
+        symbol_table.push_back($NAME.text);
+        type_table.push_back('a');
+        int index = symbol_table.size() - 1;
+
+        calculateStack("new Array", 1);
+        calculateStack("dup", 1);
+        calculateStack("invokespecial Array/<init>()V", -1);
+        calculateStack("astore " + to_string(index), -1);
+    };
+
+
+st_array_push: NAME DOT PUSH OP_PAR
+    {
+        auto it = find(symbol_table.begin(), symbol_table.end(), $NAME.text);
+        int index = distance(symbol_table.begin(), it);
+        char type = type_table[index];
+
+
+        if (type == 'a') 
+            calculateStack("aload " + to_string(index), 1);
+        else {
+            cerr << $NAME.text << " is not an array\n";
+            // printFormat("invokevirtual Array/exit()V\n");
+            // exit(0);
+        }
+    }
+    expression CL_PAR
+    {
+        if ($expression.type == 'i')
+            calculateStack("invokevirtual Array/push(I)V", -2);
+        else
+            printFormat("expression CL_PAR type not valid!\n");
+    };
+
+
+st_array_set: NAME OP_BRA
+    {
+        auto it = find(symbol_table.begin(), symbol_table.end(), $NAME.text);
+        int index = distance(symbol_table.begin(), it);
+        char type = type_table[index]; 
+
+        calculateStack("aload " + to_string(index), 1);
+    }
+    ex1 = expression CL_BRA ATTRIB ex2 = expression
+    {
+        if ($ex1.type == 'i' && $ex2.type == 'i')
+            calculateStack("invokevirtual Array/set(II)V", -3);
+        else
+            printFormat("\ninvalid st_array_set type\n");
     };
 
 
@@ -260,20 +344,56 @@ factor returns [char type]: NUMBER
             calculateStack("iload " + to_string(index), +1);
         else if (type == 's')
             calculateStack("aload " + to_string(index), +1);
-        else
+        else if (type == 'a'){
+            calculateStack("aload " + to_string(index), +1);
+            printFormat("invokevirtual Array/string()Ljava/lang/String;\n");
+            type = 's';
+        }else
             printFormat("\nExpression NAME type invalid\n\n");
         
         $type = type;
     }
-    | READ_STR OP_PAR CL_PAR
+    | NAME OP_BRA
     {
-        printFormat("invokestatic Runtime/readString()Ljava/lang/String;\n");
-        $type = 's';
+        auto it = find(symbol_table.begin(), symbol_table.end(), $NAME.text);
+        int index = distance(symbol_table.begin(), it);
+        char type = type_table[index];
+
+        if (type == 'a') {
+            calculateStack("aload " + to_string(index), +1);
+        } else {
+            printFormat("\nExpression NAME OP_BRA type invalid\n\n");
+        }
+
+    } expression CL_BRA
+    {
+        calculateStack("invokevirtual Array/get(I)I", -1);
+        $type = 'i';
+    }
+    | NAME DOT LENGTH
+    {
+        printFormat("ENTROU NO LENGTH\n");
+        auto it = find(symbol_table.begin(), symbol_table.end(), $NAME.text);
+        int index = distance(symbol_table.begin(), it);
+        char type = type_table[index];
+
+        if (type == 'a') {
+            calculateStack("aload " + to_string(index), 1);
+            printFormat("invokevirtual Array/length()I\n");
+            $type = 'i';
+        } else {
+            // printFormat("\nNAME DOT LENGTH invalid type\n");
+            cerr << $NAME.text << " is not an array";
+        }
+        
     }
     | READ_INT OP_PAR CL_PAR
     {
         calculateStack("invokestatic Runtime/readInt()I", +1);
         $type = 'i';
     }
-    ;
-
+    | READ_STR OP_PAR CL_PAR
+    {
+        printFormat("invokestatic Runtime/readString()Ljava/lang/String;\n");
+        $type = 's';
+    };

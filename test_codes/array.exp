@@ -1,0 +1,12 @@
+v = 1
+a = []
+
+a.push(1)
+a.push(15)
+a.push(2)
+a.push(5)
+a.push(7)
+
+a[0] = 25
+
+print(a)

@@ -10,26 +10,59 @@
 
 .method public static main([Ljava/lang/String;)V
 
+   ldc 10
+   istore 1
+   BEGIN_WHILE_1:
+   iload 1
+   ldc 1
+   if_icmple   END_WHILE_1
+   BEGIN_WHILE_2:
+   iload 1
+   ldc 1
+   if_icmple   END_WHILE_2
    getstatic java/lang/System/out Ljava/io/PrintStream;
-   ldc "abc"
+   ldc "Primeiro while nivel 2"
    invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
    getstatic java/lang/System/out Ljava/io/PrintStream;
    invokevirtual java/io/PrintStream/println()V
+   goto END_WHILE_2
+   goto BEGIN_WHILE_2
+   END_WHILE_2:
    getstatic java/lang/System/out Ljava/io/PrintStream;
-   invokestatic Runtime/readString()Ljava/lang/String;
+   ldc "Primeiro while nivel 1"
    invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
    getstatic java/lang/System/out Ljava/io/PrintStream;
    invokevirtual java/io/PrintStream/println()V
-   ldc "def"
-   astore 1
+   goto END_WHILE_1
+   goto BEGIN_WHILE_1
+   END_WHILE_1:
+   BEGIN_WHILE_3:
+   iload 1
+   ldc 1
+   if_icmple   END_WHILE_3
+   BEGIN_WHILE_4:
+   iload 1
+   ldc 1
+   if_icmple   END_WHILE_4
    getstatic java/lang/System/out Ljava/io/PrintStream;
-   aload 1
+   ldc "Segundo while nivel 2"
    invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
    getstatic java/lang/System/out Ljava/io/PrintStream;
    invokevirtual java/io/PrintStream/println()V
+   goto END_WHILE_4
+   goto BEGIN_WHILE_4
+   END_WHILE_4:
+   getstatic java/lang/System/out Ljava/io/PrintStream;
+   ldc "Segundo while nivel 1"
+   invokevirtual java/io/PrintStream/print(Ljava/lang/String;)V
+   getstatic java/lang/System/out Ljava/io/PrintStream;
+   invokevirtual java/io/PrintStream/println()V
+   goto END_WHILE_3
+   goto BEGIN_WHILE_3
+   END_WHILE_3:
  return
 .limit stack 2
 .limit locals 2
 .end method
 
-; symbol_table: args x 
+; symbol_table: args a 

@@ -8,6 +8,9 @@
         "string_view": "cpp",
         "hash_map": "cpp",
         "hash_set": "cpp",
-        "*.g4": "cpp"
+        "*.g4": "cpp",
+        "deque": "cpp",
+        "vector": "cpp",
+        "list": "cpp"
     }
 }

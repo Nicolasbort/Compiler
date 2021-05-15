@@ -1,7 +1,22 @@
-a = 1
-while a <= 5 {
-    a = a + 1
-
-    print(a)
+a = 10
+while a > 1 {
+    while a > 1 {
+        print("Primeiro while nivel 2")
+        break
+    }
+    print("Primeiro while nivel 1")
+    break
 }
 
+continue
+
+while a > 1 {
+    while a > 1 {
+        print("Segundo while nivel 2")
+        break
+    }
+    print("Segundo while nivel 1")
+    break
+}
+
+break
