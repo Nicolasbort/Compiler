@@ -17,7 +17,7 @@ public:
     OP_CUR = 13, CL_CUR = 14, ATTRIB = 15, COMMA = 16, DOT = 17, EQ = 18, 
     NE = 19, GT = 20, GE = 21, LT = 22, LE = 23, NUMBER = 24, STRING = 25, 
     PRINT = 26, READ_INT = 27, READ_STR = 28, IF = 29, ELSE = 30, WHILE = 31, 
-    BREAK = 32, CONTINUE = 33, PUSH = 34, LENGTH = 35, NAME = 36
+    BREAK = 32, CONTINUE = 33, PUSH = 34, LENGTH = 35, DEF = 36, NAME = 37
   };
 
   explicit ExpLexer(antlr4::CharStream *input);

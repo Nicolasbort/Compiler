@@ -4,6 +4,8 @@
     #include <vector>
     #include <stdlib.h>
     
+    #define RED 31
+    #define YELLOW 33
     
     using namespace std;
 
@@ -26,7 +28,7 @@ public:
     OP_CUR = 13, CL_CUR = 14, ATTRIB = 15, COMMA = 16, DOT = 17, EQ = 18, 
     NE = 19, GT = 20, GE = 21, LT = 22, LE = 23, NUMBER = 24, STRING = 25, 
     PRINT = 26, READ_INT = 27, READ_STR = 28, IF = 29, ELSE = 30, WHILE = 31, 
-    BREAK = 32, CONTINUE = 33, PUSH = 34, LENGTH = 35, NAME = 36
+    BREAK = 32, CONTINUE = 33, PUSH = 34, LENGTH = 35, DEF = 36, NAME = 37
   };
 
   enum {
@@ -49,13 +51,14 @@ public:
 
       vector<string> symbol_table = {"args"};
       vector<char>   type_table = {'s'};
+      vector<bool>   used_vars = {true};
       vector<int>    list_while;
+
       int stackSize    = 0;
       int stackMax     = 0;
 
       int ifCounter    = 0;
       int whileCounter = 0;
-      int whileGlobal  = 0;
 
       void calculateStack(string command, short value)
       {
@@ -72,6 +75,22 @@ public:
           cout << "   " << command;
       }
 
+
+      void checkUnusedVars()
+      {
+          for (int i=0; i<used_vars.size(); i++)
+          {
+              if (!used_vars[i]) 
+                  cerr << "Warning: Variable '" << symbol_table[i] << "' is not beeing used\n";
+          }
+      }
+
+      bool strIsNumber(const string& s)
+      {
+          string::const_iterator it = s.begin();
+          while (it != s.end() && isdigit(*it)) ++it;
+          return !s.empty() && it == s.end();
+      }
 
 
 
@@ -155,7 +174,7 @@ public:
   class  St_attribContext : public antlr4::ParserRuleContext {
   public:
     antlr4::Token *nameToken = nullptr;
-    ExpParser::ExpressionContext *expressionContext = nullptr;
+    ExpParser::ExpressionContext *ex = nullptr;
     St_attribContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *NAME();
@@ -169,6 +188,7 @@ public:
 
   class  St_ifContext : public antlr4::ParserRuleContext {
   public:
+    ExpParser::ComparisionContext *comparisionContext = nullptr;
     St_ifContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IF();
@@ -188,6 +208,7 @@ public:
 
   class  St_whileContext : public antlr4::ParserRuleContext {
   public:
+    ExpParser::ComparisionContext *comparisionContext = nullptr;
     St_whileContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *WHILE();
@@ -278,7 +299,10 @@ public:
 
   class  ComparisionContext : public antlr4::ParserRuleContext {
   public:
+    bool isValid;
+    ExpParser::ExpressionContext *ex1 = nullptr;
     antlr4::Token *op = nullptr;
+    ExpParser::ExpressionContext *ex2 = nullptr;
     ComparisionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<ExpressionContext *> expression();
@@ -300,6 +324,7 @@ public:
     char type;
     ExpParser::TermContext *t1 = nullptr;
     antlr4::Token *op = nullptr;
+    ExpParser::TermContext *t2 = nullptr;
     ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<TermContext *> term();
