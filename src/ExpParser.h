@@ -60,7 +60,7 @@ public:
       int ifCounter    = 0;
       int whileCounter = 0;
 
-      void calculateStack(string command, short value)
+      void printAndChangeStack(string command, short value)
       {
           stackSize += value;
 
@@ -75,21 +75,37 @@ public:
           cout << "   " << command;
       }
 
+      void printError(string message, int line)
+      {
+          cerr << "Error: Line " << line << " - " << message << "\n";
+      }
 
       void checkUnusedVars()
       {
           for (int i=0; i<used_vars.size(); i++)
           {
               if (!used_vars[i]) 
-                  cerr << "Warning: Variable '" << symbol_table[i] << "' is not beeing used\n";
+                  printError("'" + symbol_table[i] + "' is defined but never used", -1);
           }
       }
 
-      bool strIsNumber(const string& s)
+      int getVarIndex(string varName)
       {
-          string::const_iterator it = s.begin();
-          while (it != s.end() && isdigit(*it)) ++it;
-          return !s.empty() && it == s.end();
+          auto it = find(symbol_table.begin(), symbol_table.end(), varName);
+
+          if (it == symbol_table.end())
+              return -1;
+
+          return distance(symbol_table.begin(), it);
+      } 
+
+      int addNewVariable(string name, char type)
+      {
+          symbol_table.push_back(name);
+          type_table.push_back(type);
+          used_vars.push_back(false);
+
+          return symbol_table.size() - 1;
       }
 
 
@@ -344,6 +360,7 @@ public:
     char type;
     ExpParser::FactorContext *f1 = nullptr;
     antlr4::Token *op = nullptr;
+    ExpParser::FactorContext *f2 = nullptr;
     TermContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<FactorContext *> factor();
